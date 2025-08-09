@@ -1,0 +1,4 @@
+flask==3.1.1
+adafruit-circuitpython-pn532==2.4.5
+Adafruit-Blinka==8.62.0
+RPi.GPIO==0.7.1
