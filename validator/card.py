@@ -17,10 +17,11 @@ class CardHandler:
 
     def read_passive(self, timeout=1):
         uid = self.reader.read_passive_target(timeout=timeout)
-        print("Found card with UID:", [hex(i) for i in uid])
 
         if not uid:
             return
+
+        print("Found card with UID:", [hex(i) for i in uid])
 
         sectors = []
         for sector_i in range(self.SECTOR_COUNT):
@@ -44,7 +45,20 @@ class CardHandler:
                 if data is None:
                     return
 
-                blocks.append(data)
+                # change this at some point
+                # this skips the first block of the first segment
+                # and the last block of every segment
+                # this is done because they can't be decoded as standard utf-8
+                # eventually find a way to store this information
+                # keeping the uid and the key/access data ought to be possible
+                if sector_i == block_i == 0:
+                    blocks.append('UID block')
+                    continue
+                if block_i == 3:
+                    blocks.append('ACCESS INFO block')
+                    continue
+
+                blocks.append(data.decode())
 
             sectors.append(blocks)
 
