@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bus Validator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta lang="en">
+
+    <script>
+      setInterval(async () => {
+        const now = new Date();
+        document.getElementById('time').innerText = now.toLocaleTimeString('de-DE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+      }, 1000);
+    </script>
+  </head>
+
+  <body>
+    <h1>Bus validator</h1>
+    <h1>The current time is <span id="time"></span></h1>
+  </body>
+</html>
+
