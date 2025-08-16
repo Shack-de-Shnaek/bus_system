@@ -1,4 +1,4 @@
-#!/home/dragan/college/bus_system/env/bin/python
+#!/home/dragan/bus_system/env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
