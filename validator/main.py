@@ -15,13 +15,14 @@ print("Waiting for a card")
 cardHandler = CardHandler(pn532)
 
 while True:
-    data = cardHandler.read_passive(timeout=1)
-    
-    if not data:
+    card = cardHandler.read_passive(timeout=1)
+
+    if not card:
         time.sleep(1)
         continue
 
-    for sector_i, sector in enumerate(data):
+    print(card)
+    for sector_i, sector in enumerate(card.sectors):
         print(f"Sector {sector_i}:")
         for block_i, block in enumerate(sector):
             print(f"\tBlock {block_i}: {block}")
