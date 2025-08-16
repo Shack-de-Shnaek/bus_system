@@ -2,7 +2,17 @@ from adafruit_pn532.adafruit_pn532 import MIFARE_CMD_AUTH_A
 
 
 class Card:
-    pass
+    def __init__(self, uid, sectors):
+        self.uid = uid
+        self.sectors = sectors
+
+    def pay_ride(self): ...
+    def register(self): ...
+    def disable(self): ...
+    def refill(self, ride_count): ...
+
+    def __str__(self):
+        return f"Card UID: {self.uid}"
 
 
 class CardHandler:
@@ -52,14 +62,14 @@ class CardHandler:
                 # eventually find a way to store this information
                 # keeping the uid and the key/access data ought to be possible
                 if sector_i == block_i == 0:
-                    blocks.append('UID block')
+                    blocks.append("UID block")
                     continue
                 if block_i == 3:
-                    blocks.append('ACCESS INFO block')
+                    blocks.append("ACCESS INFO block")
                     continue
 
                 blocks.append(data.decode())
 
             sectors.append(blocks)
 
-        return sectors
+        return Card(uid, sectors)
