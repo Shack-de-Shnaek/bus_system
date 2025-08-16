@@ -3,3 +3,4 @@ adafruit-circuitpython-pn532==2.4.5
 Adafruit-Blinka==8.62.0
 RPi.GPIO==0.7.1
 peewee==3.18.2
+requests==2.32.4

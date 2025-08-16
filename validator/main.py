@@ -1,3 +1,4 @@
+import sys
 import time
 import board
 import busio
@@ -14,6 +15,18 @@ print("Waiting for a card")
 
 cardHandler = CardHandler(pn532)
 
+mode = None
+if len(sys.argv) > 1:
+    entered_mode = sys.argv[1].lower()
+    if entered_mode not in ["pay", "register", "disable", "refill"]:
+        print(f"Invalid mode '{entered_mode}'. Valid modes are: pay, register, disable, refill.")
+        sys.exit(1)
+    mode = entered_mode
+
+domain = "localhost:5000"
+if len(sys.argv) > 2:
+    domain = sys.argv[2]
+
 while True:
     card = cardHandler.read_passive(timeout=1)
 
@@ -29,3 +42,6 @@ while True:
 
     print("Done reading. Remove the card and press Ctrl-C to exit or wait for next card.")
     time.sleep(1)
+
+    if not mode:
+        continue
