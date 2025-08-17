@@ -82,6 +82,9 @@ class Card:
 
         data = response.json()
 
+        print(data)
+        print(self.uid)
+
         card_id = data["card_id"]
         random_num = data["random_num"]
         checksum = self.generate_checksum(card_id, random_num)
