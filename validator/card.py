@@ -1,7 +1,7 @@
-import string
 import copy
 import requests
 from adafruit_pn532.adafruit_pn532 import MIFARE_CMD_AUTH_A
+
 
 class Card:
     def __init__(self, card_handler, uid, sectors, domain):
@@ -67,7 +67,7 @@ class Card:
     def pay_ride(self): ...
 
     def register(self):
-        response = requests.post(REGISTER_URL)
+        response = requests.post(self.REGISTER_URL)
 
         if response.status_code != 200:
             raise RuntimeError(f"Failed to register card: {response.text}")
@@ -90,7 +90,7 @@ class Card:
         card_id = self.sectors[1][0]
         checksum = self.sectors[1][1]
 
-        response = requests.post(f"{REFILL_URL}/{card_id}", json={"ride_count": ride_count, "checksum": checksum})
+        response = requests.post(f"{self.REFILL_URL}/{card_id}", json={"ride_count": ride_count, "checksum": checksum})
 
         if response.status_code != 200:
             raise RuntimeError(f"Failed to refill card: {response.text}")

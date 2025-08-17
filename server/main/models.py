@@ -1,17 +1,18 @@
 import random
 import string
-from peewee import Model, ForeignKeyField, DateTimeField, CharField, IntegerField, BooleanField, UUIDField, SQL
+
+from django.db import models
 
 chars = string.digits + string.ascii_lowercase + string.ascii_uppercase
 
 
 # don't write random_num or rides_left on card, only id and checksum
-class Card(Model):
-    id = CharField(max_length=16, index=True, unique=True, primary_key=True)
-    active = BooleanField(default=True)
-    rides_left = IntegerField(default=0)
-    random_num = CharField(max_length=16)
-    checksum = CharField(max_length=16)
+class Card(models.Model):
+    id = models.CharField(max_length=16, unique=True, primary_key=True)
+    active = models.BooleanField(default=True)
+    rides_left = models.IntegerField(default=5)
+    random_num = models.CharField(max_length=16)
+    checksum = models.CharField(max_length=16)
 
     def generate_checksum(self):
         card_id = self.id
@@ -41,7 +42,7 @@ class Card(Model):
         if self.rides_left <= 0:
             raise ValueError("No rides left on the card")
 
-        Ride.create(
+        Ride.objects.create(
             card=self,
             timestamp=Ride.timestamp,
             random_num_at_time=self.random_num,
@@ -76,9 +77,9 @@ class Card(Model):
         return super().save(force_insert, only)
 
 
-class Ride(Model):
-    card = ForeignKeyField(Card, bachref="rides", on_delete="CASCADE")
-    timestamp = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
-    random_num_at_time = CharField(max_length=16)
-    rides_left_at_time = IntegerField()
-    bus_line = CharField(max_length=10)
+class Ride(models.Model):
+    card = models.ForeignKey(Card, related_name="rides", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    random_num_at_time = models.CharField(max_length=16)
+    rides_left_at_time = models.IntegerField()
+    bus_line = models.CharField(max_length=10)
