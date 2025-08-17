@@ -16,19 +16,25 @@ class Card:
         self.REFILL_URL = self.SERVER_URL + "refill/"
 
     @staticmethod
-    def encode_str(str):
+    def encode_str(string):
         out = ""
 
-        for c in str:
+        for c in string:
             code = ord(c)
+            char = ""
             if code >= 48 and code <= 57:
-                out += code - 48
+                char += str(code - 48)
             elif code >= 65 and code <= 90:
-                out += code - 65 + 10
+                char += str(code - 65 + 10)
             elif code >= 97 and code <= 122:
-                out += code - 97 + 10 + 26
+                char += str(code - 97 + 10 + 26)
             else:
                 raise ValueError(f"Invalid character '{c}' in string. Only alphanumeric characters are allowed.")
+
+            if len(char) == 1:
+                char = "0" + char
+
+            out += char
 
         return out
 
@@ -36,7 +42,9 @@ class Card:
     def decode_str(encoded_str):
         out = ""
 
-        for c in encoded_str:
+        i = 0
+        while i < len(encoded_str) - 1:
+            c = int(encoded_str[i : i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
             elif c >= 10 and c <= 35:

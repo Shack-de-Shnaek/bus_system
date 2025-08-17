@@ -14,9 +14,51 @@ class Card(models.Model):
     random_num = models.CharField(max_length=16)
     checksum = models.CharField(max_length=16)
 
-    def generate_checksum(self):
-        card_id = self.id
-        random_num = self.random_num
+    @staticmethod
+    def encode_str(string):
+        out = ""
+
+        for c in string:
+            code = ord(c)
+            char = ""
+            if code >= 48 and code <= 57:
+                char += str(code - 48)
+            elif code >= 65 and code <= 90:
+                char += str(code - 65 + 10)
+            elif code >= 97 and code <= 122:
+                char += str(code - 97 + 10 + 26)
+            else:
+                raise ValueError(f"Invalid character '{c}' in string. Only alphanumeric characters are allowed.")
+
+            if len(char) == 1:
+                char = "0" + char
+
+            out += char
+
+        return out
+
+    @staticmethod
+    def decode_str(encoded_str):
+        out = ""
+
+        i = 0
+        while i < len(encoded_str) - 1:
+            c = int(encoded_str[i : i + 2])
+            if c >= 0 and c <= 9:
+                out += chr(c + 48)
+            elif c >= 10 and c <= 35:
+                out += chr(c - 10 + 65)
+            elif c >= 36 and c <= 61:
+                out += chr(c - 36 + 97)
+
+        return out
+
+    def generate_checksum(self, card_id=None, random_num=None):
+        if not card_id:
+            card_id = self.id
+
+        if not random_num:
+            random_num = self.random_num
 
         if len(card_id) != len(random_num):
             raise ValueError("Card ID and random number must be of the same length")
@@ -30,7 +72,7 @@ class Card(models.Model):
         random_num_encoded = Card.encode_str(random_num)
 
         for i in range(16):
-            out += (int(card_id_encoded[i]) + int(random_num_encoded[i])) % 61
+            out += str((int(card_id_encoded[i]) + int(random_num_encoded[i])) % 61)
 
         return out
 
@@ -69,12 +111,12 @@ class Card(models.Model):
         self.random_num = self._generate_random_number()
         self.checksum = self.generate_checksum()
 
-    def save(self, force_insert=False, only=None):
+    def save(self, *args, **kwargs):
         if not self.id:
             self.id = self._generate_random_number()
             self._update_security()
 
-        return super().save(force_insert, only)
+        return super().save(*args, **kwargs)
 
 
 class Ride(models.Model):
