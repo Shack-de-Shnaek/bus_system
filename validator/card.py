@@ -10,10 +10,10 @@ class Card:
         self.sectors = sectors
 
         self.SERVER_URL = f"http://{domain}/"
-        self.PAY_URL = self.SERVER_URL + "api/pay"
-        self.REGISTER_URL = self.SERVER_URL + "api/register"
-        self.DISABLE_URL = self.SERVER_URL + "api/disable"
-        self.REFILL_URL = self.SERVER_URL + "api/refill"
+        self.PAY_URL = self.SERVER_URL + "pay/"
+        self.REGISTER_URL = self.SERVER_URL + "register/"
+        self.DISABLE_URL = self.SERVER_URL + "disable/"
+        self.REFILL_URL = self.SERVER_URL + "refill/"
 
     @staticmethod
     def encode_str(str):
