@@ -13,15 +13,13 @@ pn532.SAM_configuration()  # Put PN532 in normal mode (polling)
 
 print("Waiting for a card")
 
-cardHandler = CardHandler(pn532)
-
 mode_choices = ["pay", "register", "disable", "refill"]
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("mode", help="mode to run the validator in", choices=mode_choices, required=False)
-parser.add_argument("domain", help="the domain of the server", default="localhost:5000", required=False)
-parser.add_argument("bus_line", help="the bus line to pay for, if in pay mode", default=1, required=False)
+parser.add_argument("--mode", help="mode to run the validator in", choices=mode_choices)
+parser.add_argument("--domain", help="the domain of the server", default="localhost:5000")
+parser.add_argument("--bus_line", help="the bus line to pay for, if in pay mode", default=1)
 
 args = parser.parse_args()
 
@@ -34,6 +32,8 @@ domain = args.domain
 bus_line = None
 if mode == "pay":
     bus_line = args.bus_line
+
+cardHandler = CardHandler(pn532, domain)
 
 while True:
     card = cardHandler.read_passive(timeout=1)

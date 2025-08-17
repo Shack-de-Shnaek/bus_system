@@ -3,20 +3,17 @@ import copy
 import requests
 from adafruit_pn532.adafruit_pn532 import MIFARE_CMD_AUTH_A
 
-from validator.main import domain
-
-SERVER_URL = f"http://{domain}/"
-PAY_URL = SERVER_URL + "api/pay"
-REGISTER_URL = SERVER_URL + "api/register"
-DISABLE_URL = SERVER_URL + "api/disable"
-REFILL_URL = SERVER_URL + "api/refill"
-
-
 class Card:
-    def __init__(self, card_handler, uid, sectors):
+    def __init__(self, card_handler, uid, sectors, domain):
         self.handler = card_handler
         self.uid = uid
         self.sectors = sectors
+
+        self.SERVER_URL = f"http://{domain}/"
+        self.PAY_URL = self.SERVER_URL + "api/pay"
+        self.REGISTER_URL = self.SERVER_URL + "api/register"
+        self.DISABLE_URL = self.SERVER_URL + "api/disable"
+        self.REFILL_URL = self.SERVER_URL + "api/refill"
 
     @staticmethod
     def encode_str(str):
@@ -116,8 +113,9 @@ class CardHandler:
 
     KEY_DEFAULT = b"\xff\xff\xff\xff\xff\xff"
 
-    def __init__(self, reader):
+    def __init__(self, reader, domain):
         self.reader = reader
+        self.domain = domain
 
     def read_passive(self, timeout=1):
         uid = self.reader.read_passive_target(timeout=timeout)
@@ -166,7 +164,7 @@ class CardHandler:
 
             sectors.append(blocks)
 
-        return Card(self, [hex(i) for i in uid], sectors)
+        return Card(self, [hex(i) for i in uid], sectors, domain=self.domain)
 
     def read_block(self, card, sector, block):
         uid = copy.deepcopy(card.uid)
