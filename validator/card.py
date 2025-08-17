@@ -68,7 +68,7 @@ class Card:
         random_num_encoded = Card.encode_str(random_num)
 
         for i in range(16):
-            out += (int(card_id_encoded[i]) + int(random_num_encoded[i])) % 61
+            out += str((int(card_id_encoded[i]) + int(random_num_encoded[i])) % 61)
 
         return out
 
