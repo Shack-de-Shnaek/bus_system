@@ -89,8 +89,8 @@ class Card:
         random_num = data["random_num"]
         checksum = self.generate_checksum(card_id, random_num)
 
-        self.handler.write_block(self, 1, 0, card_id.encode("utf-8"))
-        self.handler.write_block(self, 1, 1, checksum.encode("utf-8"))
+        self.handler.write_block(self, 1, 0, bytearray(card_id, "utf-8"))
+        self.handler.write_block(self, 1, 1, bytearray(checksum, "utf-8"))
 
     def disable(self): ...
 
@@ -111,7 +111,7 @@ class Card:
         random_num = data["random_num"]
         checksum = self.generate_checksum(card_id, random_num)
 
-        self.handler.write_block(self, 1, 1, checksum.encode("utf-8"))
+        self.handler.write_block(self, 1, 1, bytearray(checksum, "utf-8"))
 
     def __str__(self):
         return f"Card UID: {self.uid}"
@@ -175,14 +175,14 @@ class CardHandler:
 
             sectors.append(blocks)
 
-        return Card(self, [hex(i) for i in uid], sectors, domain=self.domain)
+        return Card(self, uid, sectors, domain=self.domain)
 
     def read_block(self, card, sector, block):
         uid = copy.deepcopy(card.uid)
 
         if isinstance(uid, str):
-            uid = uid.encode("utf-8")
-        elif not isinstance(uid, bytes):
+            uid = bytearray(uid, "utf-8")
+        elif not isinstance(uid, bytearray):
             raise TypeError("UID must be a string or bytes")
 
         if len(uid) != 4:
@@ -206,16 +206,16 @@ class CardHandler:
         data = copy.deepcopy(data)
 
         if isinstance(uid, str):
-            uid = uid.encode("utf-8")
-        elif not isinstance(uid, bytes):
+            uid = bytearray(uid, "utf-8")
+        elif not isinstance(uid, bytearray):
             raise TypeError("UID must be a string or bytes")
 
         if len(uid) != 4:
             raise ValueError("UID must be 4 bytes long")
 
         if isinstance(data, str):
-            data = uid.encode("utf-8")
-        elif not isinstance(data, bytes):
+            data = bytearray(data, "utf-8")
+        elif not isinstance(data, bytearray):
             raise TypeError("data must be a string or bytes")
 
         if len(data) > self.BYTES_PER_BLOCK:
