@@ -42,7 +42,7 @@ class Card(models.Model):
         out = ""
 
         i = 0
-        while i < len(encoded_str) - 1:
+        while i < 32:
             c = int(encoded_str[i: i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
@@ -73,10 +73,12 @@ class Card(models.Model):
         card_id_encoded = Card.encode_str(card_id)
         random_num_encoded = Card.encode_str(random_num)
 
-        for i in range(16):
+        i = 0
+        while i < 32:
             out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            i += 2
 
-        return out
+        return Card.decode_str(out)
 
     @property
     def last_ride(self):

@@ -69,8 +69,10 @@ class Card:
         card_id_encoded = Card.encode_str(card_id)
         random_num_encoded = Card.encode_str(random_num)
 
-        for i in range(16):
+        i = 0
+        while i < 32:
             out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            i += 2
 
         return Card.decode_str(out)
 
