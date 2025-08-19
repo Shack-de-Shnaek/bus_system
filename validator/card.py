@@ -72,7 +72,7 @@ class Card:
         for i in range(16):
             out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
 
-        return out
+        return Card.decode_str(out)
 
     def pay_ride(self): ...
 
