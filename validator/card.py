@@ -44,7 +44,7 @@ class Card:
 
         i = 0
         while i < len(encoded_str) - 1:
-            c = int(encoded_str[i : i + 2])
+            c = int(encoded_str[i: i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
             elif c >= 10 and c <= 35:
@@ -68,7 +68,7 @@ class Card:
         random_num_encoded = Card.encode_str(random_num)
 
         for i in range(16):
-            out += str((int("".join(card_id_encoded[i : i + 2])) + int("".join(random_num_encoded[i : i + 2])) % 61))
+            out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
 
         return out
 
