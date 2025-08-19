@@ -51,6 +51,8 @@ class Card(models.Model):
             elif c >= 36 and c <= 61:
                 out += chr(c - 36 + 97)
 
+            i += 2
+
         return out
 
     def generate_checksum(self, card_id=None, random_num=None):
