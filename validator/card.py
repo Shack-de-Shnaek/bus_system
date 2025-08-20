@@ -176,12 +176,9 @@ class CardHandler:
                 if data is None:
                     return
 
-                # change this at some point
                 # this skips the first block of the first segment
                 # and the last block of every segment
                 # this is done because they can't be decoded as standard utf-8
-                # eventually find a way to store this information
-                # keeping the uid and the key/access data ought to be possible
                 if sector_i == block_i == 0:
                     blocks.append("UID block")
                     continue
