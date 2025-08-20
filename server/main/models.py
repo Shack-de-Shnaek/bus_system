@@ -75,7 +75,11 @@ class Card(models.Model):
 
         i = 0
         while i < 32:
-            out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            c = str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            if len(c) == 1:
+                c = "0" + c
+
+            out += c
             i += 2
 
         return Card.decode_str(out)

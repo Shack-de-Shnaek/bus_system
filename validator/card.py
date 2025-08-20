@@ -71,7 +71,11 @@ class Card:
 
         i = 0
         while i < 32:
-            out += str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            c = str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            if len(c) == 1:
+                c = "0" + c
+
+            out += c
             i += 2
 
         return Card.decode_str(out)
@@ -85,9 +89,6 @@ class Card:
             raise RuntimeError(f"Failed to register card: {response.text}")
 
         data = response.json()
-
-        print(data)
-        print(self.uid)
 
         card_id = data["card_id"]
         random_num = data["random_num"]
@@ -137,8 +138,6 @@ class CardHandler:
 
         if not uid:
             return
-
-        print("Found card with UID:", [hex(i) for i in uid])
 
         sectors = []
         for sector_i in range(self.SECTOR_COUNT):
