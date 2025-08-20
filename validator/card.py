@@ -81,7 +81,7 @@ class Card:
         return Card.decode_str(out)
 
     def pay_ride(self, bus_line):
-        response = requests.post(f"{self.PAY_URL}{self.sectors[1][0]}/{bus_line}", {"checksum": self.sectors[1][1]})
+        response = requests.post(f"{self.PAY_URL}{self.sectors[1][0]}/{bus_line}/", {"checksum": self.sectors[1][1]})
 
         if response.status_code != 200:
             raise RuntimeError(f"Failed to pay for ride: {response.text}")
