@@ -43,7 +43,7 @@ class Card:
         out = ""
 
         i = 0
-        while i < len(encoded_str) - 1:
+        while i < 32:
             c = int(encoded_str[i: i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
