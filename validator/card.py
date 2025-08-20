@@ -48,7 +48,7 @@ class Card:
 
         i = 0
         while i < 32:
-            c = int(encoded_str[i: i + 2])
+            c = int(encoded_str[i : i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
             elif c >= 10 and c <= 35:
@@ -75,7 +75,7 @@ class Card:
 
         i = 0
         while i < 32:
-            c = str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            c = str((int("".join(card_id_encoded[i : i + 2])) + int("".join(random_num_encoded[i : i + 2]))) % 61)
             if len(c) == 1:
                 c = "0" + c
 
@@ -121,7 +121,7 @@ class Card:
         card_id = self.sectors[1][0]
         checksum = self.sectors[1][1]
 
-        response = requests.post(f"{self.REFILL_URL}/{card_id}", json={"ride_count": ride_count, "checksum": checksum})
+        response = requests.post(f"{self.REFILL_URL}{card_id}/", json={"ride_count": ride_count, "checksum": checksum})
 
         if response.status_code != 200:
             raise CardError(f"Failed to refill card: {response.text}")
