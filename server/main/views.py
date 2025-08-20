@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse, Http404, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render
 
 from main.models import Card
@@ -24,7 +24,7 @@ def pay_ride(request, card_id, bus_line):
     try:
         card = Card.objects.get(id=card_id, checksum=request_checksum)
     except Card.DoesNotExist:
-        return Http404
+        return HttpResponseNotFound
 
     card.pay_ride(bus_line)
 
@@ -35,7 +35,7 @@ def refill(request, card_id):
     try:
         card = Card.objects.get(id=card_id)
     except Card.DoesNotExist:
-        return Http404
+        return HttpResponseNotFound
 
     card.refill(5)
 
