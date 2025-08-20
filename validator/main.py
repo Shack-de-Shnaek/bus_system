@@ -55,15 +55,15 @@ while True:
     try:
         if mode == "pay":
             card.pay_ride(bus_line)
-            print(f"Paid for bus line {bus_line} on card {card.uid}")
+            print(f"Paid for bus line {bus_line} on card {card.uid}.")
         elif mode == "register":
             card.register()
-            print(f"Registered card {card.uid}")
+            print(f"Registered card {card.uid}.")
         elif mode == "disable":
             print("Disabling card...")
         elif mode == "refill":
             card.refill(5)
-            print("Refilling card...")
+            print("Card refilled.")
     except CardError as e:
         print(e)
 

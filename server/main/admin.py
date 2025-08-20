@@ -3,11 +3,33 @@ from django.contrib import admin
 from main.models import Card, Ride
 
 
+class RideInline(admin.TabularInline):
+    model = Ride
+    extra = 0
+    readonly_fields = ("timestamp", "random_num_at_time", "rides_left_at_time", "bus_line")
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    pass
+    inlines = [RideInline]
 
 
 @admin.register(Ride)
 class RideAdmin(admin.ModelAdmin):
-    pass
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -10,6 +10,10 @@ class OutOfRidesError(Exception):
     pass
 
 
+class InvalidCardError(Exception):
+    pass
+
+
 # don't write random_num or rides_left on card, only id and checksum
 class Card(models.Model):
     id = models.CharField(max_length=16, unique=True, primary_key=True)
@@ -48,7 +52,7 @@ class Card(models.Model):
 
         i = 0
         while i < 32:
-            c = int(encoded_str[i: i + 2])
+            c = int(encoded_str[i : i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
             elif c >= 10 and c <= 35:
@@ -80,7 +84,7 @@ class Card(models.Model):
 
         i = 0
         while i < 32:
-            c = str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
+            c = str((int("".join(card_id_encoded[i : i + 2])) + int("".join(random_num_encoded[i : i + 2]))) % 61)
             if len(c) == 1:
                 c = "0" + c
 
@@ -94,6 +98,12 @@ class Card(models.Model):
         return self.rides.order_by(Ride.timestamp.desc()).first()
 
     def pay_ride(self, bus_line):
+        if not self.active:
+            raise InvalidCardError("Card is not active")
+
+        if self.blacklisted:
+            raise InvalidCardError("Card is blacklisted")
+
         if self.rides_left <= 0:
             raise OutOfRidesError("No rides left on the card")
 
@@ -109,6 +119,12 @@ class Card(models.Model):
         self.save()
 
     def refill(self, ride_count):
+        if not self.active:
+            raise InvalidCardError("Card is not active")
+
+        if self.blacklisted:
+            raise InvalidCardError("Card is blacklisted")
+
         self.rides_left += ride_count
         self._update_security()
         self.save()
