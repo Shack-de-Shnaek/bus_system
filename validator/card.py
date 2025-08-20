@@ -89,7 +89,7 @@ class Card:
         data = response.json()
 
         random_num = data["random_num"]
-        checksum = self.generate_checksum(random_num=random_num)
+        checksum = self.generate_checksum(self.sectors[1][0], random_num)
 
         self.handler.write_block(self, 1, 1, bytearray(checksum, "utf-8"))
 
