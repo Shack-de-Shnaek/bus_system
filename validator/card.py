@@ -80,7 +80,18 @@ class Card:
 
         return Card.decode_str(out)
 
-    def pay_ride(self): ...
+    def pay_ride(self, bus_line):
+        response = requests.post(self.PAY_URL, {"bus_line": bus_line, "checksum": self.sectors[1][1]})
+
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to pay for ride: {response.text}")
+
+        data = response.json()
+
+        random_num = data["random_num"]
+        checksum = self.generate_checksum(random_num=random_num)
+
+        self.handler.write_block(self, 1, 1, bytearray(checksum, "utf-8"))
 
     def register(self):
         response = requests.post(self.REGISTER_URL)

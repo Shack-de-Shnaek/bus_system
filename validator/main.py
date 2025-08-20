@@ -55,7 +55,7 @@ while True:
         continue
 
     if mode == "pay":
-        card.pay_ride(domain, bus_line)
+        card.pay_ride(bus_line)
         print(f"Paid for bus line {bus_line} on card {card.uid}")
         sleep(3)
     elif mode == "register":
