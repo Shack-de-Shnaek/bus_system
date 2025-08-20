@@ -17,12 +17,15 @@ Including another URLconf
 
 from django.urls import path
 
+# import admin urls
+from django.contrib import admin
+
 from main.views import index, pay_ride, refill, register
 
 urlpatterns = [
-    path("", index, name="index"),
-    path("admin/", index, name="admin"),
+    path("admin/", admin.site.urls),
     path("pay/<str:card_id>/<str:bus_line>/", pay_ride, name="pay"),
     path("refill/<str:card_id>/", refill, name="refill"),
     path("register/", register, name="register"),
+    path("", index, name="index"),
 ]

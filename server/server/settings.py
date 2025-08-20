@@ -14,12 +14,20 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "django.contrib.staticfiles",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.admin",
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "main",
 ]
 
 MIDDLEWARE = [
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
 

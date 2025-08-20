@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.shortcuts import render
 
-from main.models import Card
+from main.models import Card, OutOfRidesError
 
 
 def index(request):
@@ -22,11 +22,18 @@ def pay_ride(request, card_id, bus_line):
         return HttpResponseBadRequest
 
     try:
-        card = Card.objects.get(id=card_id, checksum=request_checksum)
+        card = Card.objects.get(id=card_id)
     except Card.DoesNotExist:
         return HttpResponseNotFound
 
-    card.pay_ride(bus_line)
+    if card.checksum != request_checksum:
+        card.blacklist()
+        return HttpResponseBadRequest("Illegitimate card detected. Card has been blacklisted.")
+
+    try:
+        card.pay_ride(bus_line)
+    except OutOfRidesError:
+        return HttpResponseBadRequest("No rides left on the card.")
 
     return JsonResponse({"random_num": card.random_num})
 

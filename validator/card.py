@@ -3,6 +3,10 @@ import requests
 from adafruit_pn532.adafruit_pn532 import MIFARE_CMD_AUTH_A
 
 
+class CardError(Exception):
+    pass
+
+
 class Card:
     def __init__(self, card_handler, uid, sectors, domain):
         self.handler = card_handler
@@ -84,7 +88,7 @@ class Card:
         response = requests.post(f"{self.PAY_URL}{self.sectors[1][0]}/{bus_line}/", {"checksum": self.sectors[1][1]})
 
         if response.status_code != 200:
-            raise RuntimeError(f"Failed to pay for ride: {response.text}")
+            raise CardError(f"Failed to pay for ride: {response.text}")
 
         data = response.json()
 
@@ -97,7 +101,7 @@ class Card:
         response = requests.post(self.REGISTER_URL)
 
         if response.status_code != 200:
-            raise RuntimeError(f"Failed to register card: {response.text}")
+            raise CardError(f"Failed to register card: {response.text}")
 
         data = response.json()
 
@@ -120,7 +124,7 @@ class Card:
         response = requests.post(f"{self.REFILL_URL}/{card_id}", json={"ride_count": ride_count, "checksum": checksum})
 
         if response.status_code != 200:
-            raise RuntimeError(f"Failed to refill card: {response.text}")
+            raise CardError(f"Failed to refill card: {response.text}")
 
         data = response.json()
 
@@ -209,7 +213,7 @@ class CardHandler:
         )
 
         if not authenticated:
-            raise RuntimeError("Authentication failed")
+            raise CardError("Authentication failed")
 
         data = self.reader.mifare_classic_read_block(block_num)
 
@@ -247,6 +251,6 @@ class CardHandler:
         )
 
         if not authenticated:
-            raise RuntimeError("Authentication failed")
+            raise CardError("Authentication failed")
 
         return self.reader.mifare_classic_write_block(block_num, data)

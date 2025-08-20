@@ -4,7 +4,7 @@ import busio
 from time import sleep
 from adafruit_pn532 import i2c as pn532_i2c
 
-from card import CardHandler
+from card import CardHandler, CardError
 
 # --- SETUP I2C + PN532 ---
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -52,17 +52,19 @@ while True:
 
         continue
 
-    if mode == "pay":
-        card.pay_ride(bus_line)
-        print(f"Paid for bus line {bus_line} on card {card.uid}")
-        sleep(3)
-    elif mode == "register":
-        card.register()
-        print(f"Registered card {card.uid}")
-        sleep(3)
-    elif mode == "disable":
-        print("Disabling card...")
-        sleep(3)
-    elif mode == "refill":
-        print("Refilling card...")
-        sleep(3)
+    try:
+        if mode == "pay":
+            card.pay_ride(bus_line)
+            print(f"Paid for bus line {bus_line} on card {card.uid}")
+        elif mode == "register":
+            card.register()
+            print(f"Registered card {card.uid}")
+        elif mode == "disable":
+            print("Disabling card...")
+        elif mode == "refill":
+            card.refill(5)
+            print("Refilling card...")
+    except CardError as e:
+        print(e)
+
+    sleep(3)

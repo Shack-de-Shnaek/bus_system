@@ -6,6 +6,10 @@ from django.db import models
 chars = string.digits + string.ascii_lowercase + string.ascii_uppercase
 
 
+class OutOfRidesError(Exception):
+    pass
+
+
 # don't write random_num or rides_left on card, only id and checksum
 class Card(models.Model):
     id = models.CharField(max_length=16, unique=True, primary_key=True)
@@ -13,6 +17,7 @@ class Card(models.Model):
     rides_left = models.IntegerField(default=5)
     random_num = models.CharField(max_length=16)
     checksum = models.CharField(max_length=16)
+    blacklisted = models.BooleanField(default=False)
 
     @staticmethod
     def encode_str(string):
@@ -90,7 +95,7 @@ class Card(models.Model):
 
     def pay_ride(self, bus_line):
         if self.rides_left <= 0:
-            raise ValueError("No rides left on the card")
+            raise OutOfRidesError("No rides left on the card")
 
         Ride.objects.create(
             card=self,
@@ -106,6 +111,11 @@ class Card(models.Model):
     def refill(self, ride_count):
         self.rides_left += ride_count
         self._update_security()
+        self.save()
+
+    def blacklist(self):
+        self.blacklisted = True
+        self.active = False
         self.save()
 
     def _generate_random_number(self):
