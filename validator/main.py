@@ -29,9 +29,7 @@ if args.mode:
 
 domain = args.domain
 
-bus_line = None
-if mode == "pay":
-    bus_line = args.bus_line
+bus_line = args.bus_line
 
 cardHandler = CardHandler(pn532, domain)
 
