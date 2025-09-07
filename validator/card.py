@@ -151,10 +151,11 @@ class CardHandler:
 
     def read_passive(self, timeout=1):
         uid = self.reader.read_passive_target(timeout=timeout)
-        print(f"Reading card with UID: {uid}")
 
         if not uid:
             return
+
+        print(f"Reading card with UID: {uid}")
 
         sectors = []
         for sector_i in range(self.SECTOR_COUNT):
