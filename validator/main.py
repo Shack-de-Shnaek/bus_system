@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--mode", help="mode to run the validator in", choices=mode_choices)
 parser.add_argument("--domain", help="the domain of the server", default="localhost:5000")
 parser.add_argument("--bus_line", help="the bus line to pay for, if in pay mode", default=1)
-parser.add_argument("--debug", help="enable debug")
+parser.add_argument("--debug", help="enable debug", action=argparse.BooleanOptionalAction)
 
 args = parser.parse_args()
 
@@ -32,7 +32,9 @@ domain = args.domain
 
 bus_line = args.bus_line
 
-debug = args.debug is not None
+debug = False
+if args.debug:
+    debug = True
 
 cardHandler = CardHandler(pn532, domain, debug)
 
