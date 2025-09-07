@@ -21,6 +21,7 @@ class RideInline(admin.TabularInline):
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     inlines = [RideInline]
+    list_display = ("id", "active", "rides_left")
 
 
 @admin.register(Ride)

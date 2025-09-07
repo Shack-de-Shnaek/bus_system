@@ -48,7 +48,7 @@ class Card:
 
         i = 0
         while i < 32:
-            c = int(encoded_str[i : i + 2])
+            c = int(encoded_str[i: i + 2])
             if c >= 0 and c <= 9:
                 out += chr(c + 48)
             elif c >= 10 and c <= 35:
@@ -75,7 +75,7 @@ class Card:
 
         i = 0
         while i < 32:
-            c = str((int("".join(card_id_encoded[i : i + 2])) + int("".join(random_num_encoded[i : i + 2]))) % 61)
+            c = str((int("".join(card_id_encoded[i: i + 2])) + int("".join(random_num_encoded[i: i + 2]))) % 61)
             if len(c) == 1:
                 c = "0" + c
 
@@ -144,12 +144,14 @@ class CardHandler:
 
     KEY_DEFAULT = b"\xff\xff\xff\xff\xff\xff"
 
-    def __init__(self, reader, domain):
+    def __init__(self, reader, domain, debug):
         self.reader = reader
         self.domain = domain
+        self.debug = debug
 
     def read_passive(self, timeout=1):
         uid = self.reader.read_passive_target(timeout=timeout)
+        print(f"Reading card with UID: {uid}")
 
         if not uid:
             return

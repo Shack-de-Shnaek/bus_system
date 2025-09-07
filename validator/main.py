@@ -20,6 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--mode", help="mode to run the validator in", choices=mode_choices)
 parser.add_argument("--domain", help="the domain of the server", default="localhost:5000")
 parser.add_argument("--bus_line", help="the bus line to pay for, if in pay mode", default=1)
+parser.add_argument("--debug", help="enable debug")
 
 args = parser.parse_args()
 
@@ -31,7 +32,9 @@ domain = args.domain
 
 bus_line = args.bus_line
 
-cardHandler = CardHandler(pn532, domain)
+debug = args.debug is not None
+
+cardHandler = CardHandler(pn532, domain, debug)
 
 while True:
     card = cardHandler.read_passive(timeout=1)
@@ -40,11 +43,12 @@ while True:
         sleep(1)
         continue
 
-    print(card)
-    for sector_i, sector in enumerate(card.sectors):
-        print(f"Sector {sector_i}:")
-        for block_i, block in enumerate(sector):
-            print(f"\tBlock {block_i}: {block}")
+    if debug:
+        print(card)
+        for sector_i, sector in enumerate(card.sectors):
+            print(f"Sector {sector_i}:")
+            for block_i, block in enumerate(sector):
+                print(f"\tBlock {block_i}: {block}")
 
     if not mode:
         print("Done reading. Remove the card and press Ctrl-C to exit or wait for next card.")
